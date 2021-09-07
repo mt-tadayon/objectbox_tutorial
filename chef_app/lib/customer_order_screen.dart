@@ -17,11 +17,11 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
   Box<OrderModel>? orderBox;
   Stream? stream;
 
-  final syncServerIp = Platform.isAndroid ? '10.0.2.2' : '127.0.0.1';
-
   @override
   void initState() {
     super.initState();
+    final syncServerIp = Platform.isAndroid ? '10.0.2.2' : '127.0.0.1';
+
     openStore().then((Store store) {
       _store = store;
       Sync.client(
@@ -45,8 +45,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
         child: StreamBuilder<void>(
             stream: stream,
             builder: (context, AsyncSnapshot<void> snapshot) {
-              List<OrderModel>? orders =
-                  orderBox?.getAll().reversed.toList() ?? [];
+              List<OrderModel>? orders = orderBox?.getAll().reversed.toList() ?? [];
 
               if (orders.isNotEmpty) {
                 return ListView.separated(
@@ -68,9 +67,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                       ));
                     }
                     return Card(
-                      color: orders[index].ordered
-                          ? Colors.green
-                          : Colors.redAccent,
+                      color: orders[index].ordered ? Colors.green : Colors.redAccent,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -82,8 +79,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                       ),
                     );
                   },
-                  separatorBuilder: (BuildContext context, int index) =>
-                      const Divider(
+                  separatorBuilder: (BuildContext context, int index) => const Divider(
                     height: 5,
                   ),
                   itemCount: orders.length,
