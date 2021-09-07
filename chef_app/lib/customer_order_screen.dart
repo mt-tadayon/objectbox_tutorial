@@ -6,9 +6,7 @@ import 'model/order_model.dart';
 import 'objectbox.g.dart';
 
 class CustomerOrderScreen extends StatefulWidget {
-  const CustomerOrderScreen({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const CustomerOrderScreen({Key? key}) : super(key: key);
 
   @override
   State<CustomerOrderScreen> createState() => _CustomerOrderScreenState();
@@ -40,17 +38,17 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
 
   @override
   Widget build(BuildContext context) {
-    List<OrderModel>? orders = orderBox?.getAll() ?? [];
-
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('Customer Orders'),
       ),
       body: Center(
         child: StreamBuilder<void>(
             stream: streamController.stream,
             builder: (context, AsyncSnapshot<void> snapshot) {
-              if (snapshot.hasData)
+              if (snapshot.hasData) {
+                List<OrderModel>? orders = orderBox?.getAll() ?? [];
+
                 return ListView.separated(
                   itemBuilder: (BuildContext context, int index) {
                     final children = <Widget>[];
@@ -58,7 +56,9 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                       children.add(Text(item.itemName));
                     }
                     return Card(
-                      color: orders[index].ordered ? Colors.green : Colors.redAccent,
+                      color: orders[index].ordered
+                          ? Colors.green
+                          : Colors.redAccent,
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -70,17 +70,19 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
                       ),
                     );
                   },
-                  separatorBuilder: (BuildContext context, int index) => const Divider(
+                  separatorBuilder: (BuildContext context, int index) =>
+                      const Divider(
                     height: 5,
                   ),
                   itemCount: orders.length,
                 );
-
-              if (snapshot.hasError) {
-                return Text("Error");
               }
 
-              return CircularProgressIndicator();
+              if (snapshot.hasError) {
+                return const Text("Error");
+              }
+
+              return const CircularProgressIndicator();
             }),
       ),
     );
