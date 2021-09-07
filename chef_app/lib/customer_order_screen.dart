@@ -15,7 +15,7 @@ class CustomerOrderScreen extends StatefulWidget {
 class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
   Store? _store;
   Box<OrderModel>? orderBox;
-  StreamController streamController = StreamController(sync: true);
+  Stream? stream;
 
   final syncServerIp = Platform.isAndroid ? '10.0.2.2' : '127.0.0.1';
 
@@ -31,8 +31,7 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
       ).start();
 
       orderBox = store.box<OrderModel>();
-      final stream = _store?.watch<OrderModel>();
-      streamController.add(stream);
+      stream = _store?.watch<OrderModel>();
     });
   }
 
@@ -44,16 +43,29 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
       ),
       body: Center(
         child: StreamBuilder<void>(
-            stream: streamController.stream,
+            stream: stream,
             builder: (context, AsyncSnapshot<void> snapshot) {
-              if (snapshot.hasData) {
-                List<OrderModel>? orders = orderBox?.getAll() ?? [];
+              List<OrderModel>? orders =
+                  orderBox?.getAll().reversed.toList() ?? [];
 
+              if (orders.isNotEmpty) {
                 return ListView.separated(
                   itemBuilder: (BuildContext context, int index) {
                     final children = <Widget>[];
                     for (final item in orders[index].items) {
-                      children.add(Text(item.itemName));
+                      children.add(Row(
+                        children: [
+                          Expanded(
+                            child: Text(item.itemName),
+                          ),
+                          Expanded(
+                            child: Text(
+                              item.itemCount.toString(),
+                              textAlign: TextAlign.center,
+                            ),
+                          )
+                        ],
+                      ));
                     }
                     return Card(
                       color: orders[index].ordered
@@ -92,6 +104,5 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
   void dispose() {
     super.dispose();
     _store?.close();
-    streamController.close();
   }
 }
