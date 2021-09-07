@@ -39,7 +39,7 @@ class _OrderScreenState extends State<OrderScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Order App Demo"),
+        title: const Text('Order App Demo'),
       ),
       body: Column(
         children: [
@@ -100,6 +100,9 @@ class _OrderScreenState extends State<OrderScreen> {
             },
             child: const Text('confirm'),
           ),
+          const SizedBox(
+            height: 20,
+          )
         ],
       ),
     );
@@ -109,10 +112,5 @@ class _OrderScreenState extends State<OrderScreen> {
     widget.orderModel?.items.add(items[index]);
     widget.orderBox.put(widget.orderModel!);
     setState(() {});
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

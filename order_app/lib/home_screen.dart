@@ -18,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Store? _store;
-  bool hasBeenInitialized = false;
   Box<OrderModel>? orderBox;
   Box<ItemModel>? itemBox;
 
@@ -29,9 +28,6 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     openStore().then((Store store) {
       _store = store;
-      setState(() {
-        hasBeenInitialized = true;
-      });
       Sync.client(
         store,
         'ws://$syncServerIp:9999', // wss for SSL, ws for unencrypted traffic
@@ -45,28 +41,36 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Order App Demo"),
+        title: const Text('Order App Demo'),
       ),
       body: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              const Text('Welcome to our Restaurant'),
-              ElevatedButton(
-                onPressed: () {
-                  final orderModel = OrderModel();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) => OrderScreen(
-                          orderBox: orderBox!,
-                          orderModel: orderModel),
-                    ),
-                  );
-                },
-                child: const Text('Create your order!'),
-              ),
-            ],
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Welcome to our Restaurant',
+                  style: TextStyle(fontSize: 18),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final orderModel = OrderModel();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => OrderScreen(
+                            orderBox: orderBox!, orderModel: orderModel),
+                      ),
+                    );
+                  },
+                  child: const Text('Create your order!'),
+                ),
+              ],
+            ),
           )),
     );
   }

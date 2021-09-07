@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:order_app/home_screen.dart';
 
-import 'objectbox.g.dart';
-
 void main() {
-  Sync.isAvailable();
   runApp(const MyApp());
 }
 
