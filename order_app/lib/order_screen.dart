@@ -1,34 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:order_app/model/item_model.dart';
-import 'package:order_app/model/order_model.dart';
-
-import 'objectbox.g.dart';
 
 class OrderScreen extends StatefulWidget {
+  // TODO 13: Add parameters for OrderModel and OrderBox
   const OrderScreen({
     Key? key,
-    required this.orderBox,
-    this.orderModel,
   }) : super(key: key);
-
-  final Box<OrderModel> orderBox;
-  final OrderModel? orderModel;
 
   @override
   State<OrderScreen> createState() => _OrderScreenState();
 }
 
 class _OrderScreenState extends State<OrderScreen> {
-  List<ItemModel> items = [
-    ItemModel(itemCount: 0, itemName: 'Pizza Salami'),
-    ItemModel(itemCount: 0, itemName: 'Pizza Margaretta'),
-    ItemModel(itemCount: 0, itemName: 'Spaghetti'),
-    ItemModel(itemCount: 0, itemName: 'Lasagne'),
-    ItemModel(itemCount: 0, itemName: 'Rice with Chicken'),
-    ItemModel(itemCount: 0, itemName: 'Fried Noodle'),
-    ItemModel(itemCount: 0, itemName: 'Fried Rice'),
-    ItemModel(itemCount: 0, itemName: 'Salad'),
-  ];
+  // TODO 14: Create a list with dishes -> ItemModel
+  final items = [];
 
   @override
   void initState() {
@@ -94,8 +78,8 @@ class _OrderScreenState extends State<OrderScreen> {
           ),
           ElevatedButton(
             onPressed: () {
-              widget.orderModel?.ordered = true;
-              widget.orderBox.put(widget.orderModel!);
+              // TODO 18: Set ordered to true on orderModel
+              // TODO 19: Save the orderModel into the orderBox
               Navigator.pop(context);
             },
             child: const Text('confirm'),
@@ -109,8 +93,8 @@ class _OrderScreenState extends State<OrderScreen> {
   }
 
   void saveOrderModel(int index) {
-    widget.orderModel?.items.add(items[index]);
-    widget.orderBox.put(widget.orderModel!);
-    setState(() {});
+    // TODO 15: Add the item into the OrderModel items
+    // TODO 16: Save the orderModel in the orderBox
+    // TODO 17: Call set state to update the newest count
   }
 }

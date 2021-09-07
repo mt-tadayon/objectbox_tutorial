@@ -1,18 +1,4 @@
-import 'package:objectbox/objectbox.dart';
-
-import 'order_model.dart';
-
-@Entity()
-@Sync()
-class ItemModel {
-  int id = 0;
-  String itemName;
-  int itemCount;
-
-  final orderModel = ToOne<OrderModel>();
-
-  ItemModel({
-    required this.itemCount,
-    required this.itemName,
-  });
-}
+// TODO 1: Create Entity ItemModel with id, itemName and itemCount
+// TODO 1.1: Add Sync Functionality
+// TODO 2: Create a constructor with required parameters itemCount and itemName
+// TODO 5: Create a ToOne Relationship with OrderModel

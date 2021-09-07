@@ -1,13 +1,6 @@
-import 'package:flutter/widgets.dart';
-
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:order_app/model/order_model.dart';
-import 'package:order_app/order_screen.dart';
-
-import 'model/item_model.dart';
-import 'objectbox.g.dart';
+import 'package:flutter/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -17,24 +10,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Store? _store;
-  Box<OrderModel>? orderBox;
-  Box<ItemModel>? itemBox;
-
-  final syncServerIp = Platform.isAndroid ? '10.0.2.2' : '127.0.0.1';
+  // TODO 6: Initialize store, orderBox and itemBox
 
   @override
   void initState() {
     super.initState();
-    openStore().then((Store store) {
-      _store = store;
-      Sync.client(
-        store,
-        'ws://$syncServerIp:9999', // wss for SSL, ws for unencrypted traffic
-        SyncCredentials.none(),
-      ).start();
-      orderBox = store.box<OrderModel>();
-    });
+    // TODO 7: Check for the correct IP Address for Sync Server
+    // TODO 8: Open a store and connect Sync server
+    // TODO 9: Open an orderBox from the store on OrderModel
   }
 
   @override
@@ -58,14 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    final orderModel = OrderModel();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute<void>(
-                        builder: (BuildContext context) => OrderScreen(
-                            orderBox: orderBox!, orderModel: orderModel),
-                      ),
-                    );
+                    // TODO 11: Create a new OrderModel
+                    // TODO 12: Navigate to the OrderScreen and pass in orderBox and orderModel
                   },
                   child: const Text('Create your order!'),
                 ),
@@ -78,6 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     super.dispose();
-    _store?.close();
+    // TODO 10: Close the store
   }
 }

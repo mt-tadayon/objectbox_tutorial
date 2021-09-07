@@ -1,12 +1,3 @@
-import 'package:objectbox/objectbox.dart';
-import 'package:order_app/model/item_model.dart';
-
-@Entity()
-@Sync()
-class OrderModel {
-  int id = 0;
-  bool ordered = false;
-
-  @Backlink()
-  final items = ToMany<ItemModel>();
-}
+// TODO 3: Create Entity of OrderModel with id and ordered
+// TODO 3.1: Add Sync Functionality
+// TODO 4: Create a ToMany Relation to ItemModel with Backlink
