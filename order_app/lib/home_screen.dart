@@ -10,8 +10,7 @@ import 'model/item_model.dart';
 import 'objectbox.g.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key, required this.title}) : super(key: key);
-  final String title;
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -19,7 +18,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   Store? _store;
-  bool hasBeenInitialized = false;
   Box<OrderModel>? orderBox;
   Box<ItemModel>? itemBox;
 
@@ -30,14 +28,11 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     openStore().then((Store store) {
       _store = store;
-      setState(() {
-        hasBeenInitialized = true;
-      });
-      SyncClient syncClient = Sync.client(
-          store,
-          'ws://$syncServerIp:9999', // wss for SSL, ws for unencrypted traffic
-          SyncCredentials.none());
-      syncClient.start();
+      Sync.client(
+        store,
+        'ws://$syncServerIp:9999', // wss for SSL, ws for unencrypted traffic
+        SyncCredentials.none(),
+      ).start();
       orderBox = store.box<OrderModel>();
     });
   }
@@ -46,30 +41,36 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: const Text('Order App Demo'),
       ),
       body: Padding(
           padding: const EdgeInsets.all(12.0),
-          child: Column(
-            children: [
-              const Text('Welcome to our Restaurant'),
-              ElevatedButton(
-                onPressed: () {
-                  final orderModel = OrderModel();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute<void>(
-                      builder: (BuildContext context) => OrderScreen(
-                          title: widget.title,
-                          store: _store,
-                          orderBox: orderBox!,
-                          orderModel: orderModel),
-                    ),
-                  );
-                },
-                child: const Text('Create your order!'),
-              ),
-            ],
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Welcome to our Restaurant',
+                  style: TextStyle(fontSize: 18),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    final orderModel = OrderModel();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (BuildContext context) => OrderScreen(
+                            orderBox: orderBox!, orderModel: orderModel),
+                      ),
+                    );
+                  },
+                  child: const Text('Create your order!'),
+                ),
+              ],
+            ),
           )),
     );
   }
