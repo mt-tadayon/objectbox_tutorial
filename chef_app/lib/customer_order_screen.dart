@@ -17,7 +17,6 @@ class CustomerOrderScreen extends StatefulWidget {
 class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
   Store? _store;
   Box<OrderModel>? orderBox;
-  bool hasBeenInitialized = false;
   StreamController streamController = StreamController(sync: true);
 
   final syncServerIp = Platform.isAndroid ? '10.0.2.2' : '127.0.0.1';
@@ -27,19 +26,15 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
     super.initState();
     openStore().then((Store store) {
       _store = store;
-      setState(() {
-        hasBeenInitialized = true;
-      });
-      SyncClient syncClient = Sync.client(
-          store,
-          'ws://$syncServerIp:9999', // wss for SSL, ws for unencrypted traffic
-          SyncCredentials.none());
-      syncClient.start();
+      Sync.client(
+        store,
+        'ws://$syncServerIp:9999', // wss for SSL, ws for unencrypted traffic
+        SyncCredentials.none(),
+      ).start();
+
       orderBox = store.box<OrderModel>();
       final stream = _store?.watch<OrderModel>();
-      stream?.listen((event) {
-        setState(() {});
-      });
+      streamController.add(stream);
     });
   }
 
@@ -52,30 +47,41 @@ class _CustomerOrderScreenState extends State<CustomerOrderScreen> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: ListView.separated(
-          itemBuilder: (BuildContext context, int index) {
-            final children = <Widget>[];
-            for (final item in orders[index].items) {
-              children.add(Text(item.itemName));
-            }
-            return Card(
-              color: orders[index].ordered ? Colors.green : Colors.redAccent,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  children: [
-                    Text('Order no: ${orders[index].id}'),
-                    ...children,
-                  ],
-                ),
-              ),
-            );
-          },
-          separatorBuilder: (BuildContext context, int index) => const Divider(
-            height: 5,
-          ),
-          itemCount: orders.length,
-        ),
+        child: StreamBuilder<void>(
+            stream: streamController.stream,
+            builder: (context, AsyncSnapshot<void> snapshot) {
+              if (snapshot.hasData)
+                return ListView.separated(
+                  itemBuilder: (BuildContext context, int index) {
+                    final children = <Widget>[];
+                    for (final item in orders[index].items) {
+                      children.add(Text(item.itemName));
+                    }
+                    return Card(
+                      color: orders[index].ordered ? Colors.green : Colors.redAccent,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            Text('Order no: ${orders[index].id}'),
+                            ...children,
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) => const Divider(
+                    height: 5,
+                  ),
+                  itemCount: orders.length,
+                );
+
+              if (snapshot.hasError) {
+                return Text("Error");
+              }
+
+              return CircularProgressIndicator();
+            }),
       ),
     );
   }
