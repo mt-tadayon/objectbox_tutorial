@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const HomeScreen(title: 'Order App Demo'),
+      home: const HomeScreen(),
     );
   }
 }
