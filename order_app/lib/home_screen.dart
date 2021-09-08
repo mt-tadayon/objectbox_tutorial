@@ -15,7 +15,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    // TODO 7: Check for the correct IP Address for Sync Server
+    // TODO 7.Sync: Check for the correct IP Address for Sync Server
     // TODO 8: Open a store and connect Sync server
     // TODO 9: Open an orderBox from the store on OrderModel
   }
